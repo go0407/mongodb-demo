@@ -1,0 +1,61 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: order-service
+  # ??????????????
+#  config:
+#    import:
+      # optional:nacos: ?????Nacos???????Nacos???????????
+      # ?????Nacos?????????????? optional:
+#      - optional:nacos:${spring.application.name}.yml
+
+  cloud:
+    nacos:
+      # nacos ????
+      username: nacos
+      password: nacos
+      # Nacos ???????????Config?Discovery??????
+      server-addr: 127.0.0.1:8848
+
+      # ???????????(Discovery)?????????????????? false
+      config:
+        enabled: false
+        file-extension: yml # ?????????
+        group: DEFAULT_GROUP
+
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+  # 1. MySQL ?? (MyBatis Plus)
+  datasource:
+    url: jdbc:mysql://localhost:3306/demo_order_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 12345678
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # 2. MongoDB ??
+  data:
+    mongodb:
+      uri: mongodb://root:password@localhost:27017/demo_mongo_db?authSource=admin
+
+  # 3. Kafka ??
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: order-group
+      auto-offset-reset: latest
+      # ?? Spring ? JsonDeserializer (?? Jackson)
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      # ?? Spring ? JsonSerializer (?? Jackson)
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+# MyBatis Plus ??
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # ??SQL??
